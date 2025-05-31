@@ -10,6 +10,7 @@ exports.createQuiz = async (req, res) => {
     // ✅ This line is critical
     res.status(201).json(quiz);
   } catch (err) {
+    console.error('Error de servidor:', err.message);
     res.status(500).json({ error: 'Server Error' });
   }
 };
@@ -20,6 +21,7 @@ exports.getQuizzes = async (req, res) => {
     const quizzes = await Quiz.find({ user: req.user.id });
     res.status(200).json(quizzes);
   } catch (err) {
+    console.error('Error de servidor:', err.message);
     res.status(500).json({ error: 'Server Error' });
   }
 };
@@ -30,6 +32,7 @@ exports.getQuizById = async (req, res) => {
     if (!quiz) return res.status(404).json({ msg: 'Quiz not found' });
     res.json(quiz);
   } catch (err) {
+    console.error('Error de servidor:', err.message);
     res.status(500).json({ error: 'Server Error' });
   }
 };
@@ -50,6 +53,7 @@ exports.updateQuiz = async (req, res) => {
 
     res.json(quiz);
   } catch (err) {
+    console.error('Error de servidor:', err.message);
     res.status(500).json({ error: 'Server Error' });
   }
 };
@@ -65,6 +69,7 @@ exports.deleteQuiz = async (req, res) => {
     await quiz.deleteOne();
     res.json({ msg: 'Quiz eliminado' });
   } catch (err) {
+    console.error('Error de servidor:', err.message);
     res.status(500).json({ error: 'Server Error' });
   }
 };

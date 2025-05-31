@@ -15,6 +15,7 @@ const authMiddleware = (req, res, next) => {
     req.user = decoded; // El token contiene el campo `id` del usuario
     next(); // Continuar al siguiente middleware o controlador
   } catch (err) {
+    console.error('JWT verification failed:', err.message); //
     res.status(401).json({ msg: 'Token no válido' });
   }
 };

@@ -25,6 +25,7 @@ exports.submitAnswers = async (req, res) => {
 
     res.json({ score });
   } catch (err) {
+    console.error('Error de servidor:', err.message);
     res.status(500).json({ error: 'Server Error' });
   }
 };

@@ -9,7 +9,7 @@ router.post(
   [
     check('username', 'El nombre de usuario es obligatorio').not().isEmpty(),
     check('email')
-      .custom((value) => /^[\wñÑ._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(value))
+      .custom((value) => /^[wñÑ._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(value))
       .withMessage('Por favor ingresa un email válido'),
     check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({ min: 6 }),
   ],

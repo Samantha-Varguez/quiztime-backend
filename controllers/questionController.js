@@ -27,6 +27,7 @@ exports.getQuestions = async (req, res) => {
     }
     res.json(questions); // ✅ This should be a plain array
   } catch (err) {
+    console.error('Error de servidor:', err.message);
     res.status(500).json({ error: 'Server Error' });
   }
 };
@@ -43,6 +44,7 @@ exports.updateQuestion = async (req, res) => {
     await question.save();
     res.json(question);
   } catch (err) {
+    console.error('Error de servidor:', err.message);
     res.status(500).json({ error: 'Server Error' });
   }
 };
@@ -55,6 +57,7 @@ exports.deleteQuestion = async (req, res) => {
     await question.deleteOne();
     res.json({ msg: 'Question deleted' });
   } catch (err) {
+    console.error('Error de servidor:', err.message);
     res.status(500).json({ error: 'Server Error' });
   }
 };

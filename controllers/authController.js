@@ -13,20 +13,24 @@ exports.register = async (req, res) => {
   email = email.toLowerCase();
 
   try {
+
+
     const existingUser = await User.findOne({ email });
     if (existingUser)
       return res.status(400).json({ msg: 'Email ya está registrado.' });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = new User({ username, email, password: hashedPassword });
+
+    const user = new User({ username, email, password });
     await user.save();
+    console.log("User guardado:", user);
+
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 
+  
     res.json({ token });
   } catch (err) {
     console.error(err.message);
@@ -39,25 +43,37 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    console.log("Login - Email received:", email);
+    console.log("Login - Plain password received:", password);
+
     if (!email || !password)
       return res
         .status(400)
         .json({ msg: 'Por favor proporciona email y contraseña.' });
 
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ msg: 'Credenciales inválidas.' });
+    const user = await User.findOne({ email: email.toLowerCase() });
+    
+    if (!user) {
+      console.log('User not found');
+      return res.status(400).json({ msg: 'Credenciales inválidas.' });
+    }
+
+    console.log("Login - Hashed password from DB:", user.password);
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
+    if (!isMatch) {
+      console.log('Password mismatch');
       return res.status(400).json({ msg: 'Credenciales inválidas.' });
+    }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 
+    console.log('Login successful. Sending token...');
     res.json({ token });
   } catch (err) {
-    console.error(err.message);
+    console.error('Login error:', err);
     res.status(500).json({ error: 'Server Error' });
   }
 };
